@@ -15,8 +15,8 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
-          command_timeout: 1200 # 20 minutes
-          timeout: 60m  # Increase timeout to 60 minutes
+          command_timeout: 60m
+          timeout: 60m 
           script: |
             cd sports-prefect/sports
             git pull origin main
