@@ -1,4 +1,4 @@
-FROM prefecthq/prefect:3.4.8-python3.10
+FROM prefecthq/prefect:3-latest
 
 # Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
@@ -32,4 +32,4 @@ COPY . /app/sports
 WORKDIR /app/sports
 
 # Install Python packages
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install -r requirements.txt
