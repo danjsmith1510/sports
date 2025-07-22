@@ -22,11 +22,11 @@ RUN echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://pac
 # Install ODBC driver
 RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18 && apt-get clean
 
-# Install Python packages
-RUN pip install pyodbc
-
 # Clone your GitHub repo with flow code
 RUN git clone https://github.com/danjsmith1510/sports.git /app/sports
+
+# Install Python packages
+RUN pip install -r /app/sports/requirements.txt
 
 # Set working directory
 WORKDIR /app/sports
