@@ -70,4 +70,4 @@ def nba_api_flow() -> str:
     return "NBA_API Flow completed successfully"
 
 if __name__ == "__main__":
-    nba_api_flow.serve(name="nba_api_flow")
+    nba_api_flow()

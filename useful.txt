@@ -1,0 +1,13 @@
+ssh -i C:\Users\Dan\.ssh\oracle-key.pem ubuntu@159.13.44.223
+cd prefect3-sql
+
+nano Dockerfile
+nano docker-compose.yml
+
+docker-compose down
+docker-compose up -d --build
+docker ps
+docker logs prefect
+
+docker exec -it prefect bash
+exit
