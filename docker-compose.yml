@@ -3,14 +3,16 @@ version: "3.9"
 services:
   prefect:
     build: .
+    container_name: prefect
     env_file:
       - .env
-    container_name: prefect
     command: >
       bash -c "
         prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api &&
-        prefect server start --host 0.0.0.0 --port 4200 &
+        prefect server start --host 0.0.0.0 --port 4200 & 
         sleep 30 &&
+        cd /app/sports &&
+        prefect deploy --prefect-file prefect.yaml &&
         prefect worker start --pool docker-agent-pool
       "
     ports:

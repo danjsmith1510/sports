@@ -50,9 +50,9 @@ def nba_api_flow() -> str:
         print(f"Got {len(wnba_players)} wnba players")  
         insert_bronze_extracts("players-wnba", json.dumps(wnba_players))
 
-        # wnba_schedule = get_schedule(date_ranges['schedule_start_date'], date_ranges['schedule_end_date'], external_league_id_wnba)
-        # print(f"Got {len(wnba_schedule)} wnba games")  
-        # insert_bronze_extracts("schedule-wnba", json.dumps(wnba_schedule))
+        wnba_schedule = get_schedule(date_ranges['schedule_start_date'], date_ranges['schedule_end_date'], external_league_id_wnba)
+        print(f"Got {len(wnba_schedule)} wnba games")  
+        insert_bronze_extracts("schedule-wnba", json.dumps(wnba_schedule))
 
         wnba_box_scores_to_get = get_schedule(date_ranges['boxscore_start_date'], date_ranges['boxscore_end_date'], external_league_id_wnba)
 
