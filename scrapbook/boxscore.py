@@ -7,19 +7,16 @@ from tasks.common.data_loading import insert_bronze_extracts
 def xget_date_ranges():
     date_range_dict = {}
     date_range_dict['today_et'] = dt.datetime.today().astimezone(pytz.timezone('US/Eastern')).date()
-    date_range_dict['boxscore_start_date'] = dt.date(year=2021, month=5, day=13)
-    date_range_dict['boxscore_end_date'] = dt.date(year=2021, month=10, day=18) 
+    date_range_dict['boxscore_start_date'] = dt.date(year=2025, month=5, day=1)
+    date_range_dict['boxscore_end_date'] = dt.date(year=2025, month=7, day=22) 
     return date_range_dict
-
-# season	reg_season_start	playoffs_end
-# 2021	2021-05-14	2021-10-17
 
 def get_schedule_nba(schedule_start_date, schedule_end_date):
     league_id = "10"  # WNBA
     game_list=[]
     current_date = schedule_start_date
     while current_date <= schedule_end_date:
-        day_scoreboard = scoreboardv2.ScoreboardV2(game_date=current_date.strftime('%Y-%m-%d'), league_id=league_id, timeout=100) 
+        day_scoreboard = scoreboardv2.ScoreboardV2(game_date=current_date.strftime('%Y-%m-%d'), league_id=league_id, timeout=180) 
         game_list_dict = day_scoreboard.get_normalized_dict()['GameHeader']
         print ("Got NBA schedule for date " + current_date.strftime('%Y-%m-%d') + ': ' + str(len(game_list_dict)) + " games")
         if (len(game_list_dict) > 0):
@@ -42,7 +39,7 @@ for game in game_list:
     status = game['GAME_STATUS_TEXT']
     if (status == 'Final'):
         try:
-            box_score_raw = boxscoretraditionalv3.BoxScoreTraditionalV3(game_id=game['GAME_ID'], timeout=120)
+            box_score_raw = boxscoretraditionalv3.BoxScoreTraditionalV3(game_id=game['GAME_ID'], timeout=180)
             box_score = box_score_raw.get_dict()['boxScoreTraditional']
             box_score['league_id'] = 2
             box_score_list.append(box_score)
