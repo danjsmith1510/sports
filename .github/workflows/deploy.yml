@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-            cd /home/ubuntu/sports-prefect
+            cd sports-prefect/sports
             git pull origin main
             docker-compose build --no-cache
             docker-compose up -d
