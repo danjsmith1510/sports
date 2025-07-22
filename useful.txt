@@ -1,4 +1,4 @@
-ssh -i C:\Users\Dan\.ssh\oracle-key.pem ubuntu@159.13.44.223
+ssh -i C:\Users\Dan\.ssh\oracle_key.pem ubuntu@159.13.44.223
 cd prefect3-sql
 ls -a
 
