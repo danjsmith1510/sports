@@ -20,5 +20,5 @@ jobs:
           script: |
             cd sports-prefect/sports
             git pull origin main
-            docker-compose build
+            docker-compose build --no-cache
             docker-compose up -d
