@@ -1,5 +1,8 @@
 FROM prefecthq/prefect:3.4.8-python3.10
 
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
@@ -20,7 +23,7 @@ RUN echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://pac
     > /etc/apt/sources.list.d/mssql-release.list
 
 # Install ODBC driver
-RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18 && apt-get clean
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql18 && apt-get clean
 
 # Copy your local source code into the container (GitHub already pulled it to the VM)
 COPY . /app/sports
