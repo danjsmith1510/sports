@@ -1,5 +1,5 @@
 # Use Python 3.13.5 official image
-FROM python:3.13.5
+FROM python:3.13.5-slim
 
 # Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
