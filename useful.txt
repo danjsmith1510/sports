@@ -16,3 +16,5 @@ docker exec -it prefect bash
 cd /app/sports
 prefect deploy --prefect-file prefect.yaml
 exit
+
+prefect worker start --pool docker-agent-pool

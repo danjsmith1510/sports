@@ -11,7 +11,6 @@ services:
         sleep 30 &&
         cd /app/sports &&
         prefect deploy --prefect-file prefect.yaml &&
-        prefect worker start --pool docker-agent-pool
       "
     ports:
       - "4200:4200"
