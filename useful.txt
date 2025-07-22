@@ -5,7 +5,9 @@ nano Dockerfile
 nano docker-compose.yml
 
 docker-compose down
-docker-compose up -d --build
+docker-compose build --no-cache
+docker-compose up -d
+
 docker ps
 docker logs prefect
 
