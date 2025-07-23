@@ -1,7 +1,0 @@
-prefect-version: 3
-deployments:
-  - name: nba_api_flow
-    entrypoint: flows/nba_api_flow.py:nba_api_flow
-    work_pool:
-      name: docker-agent-pool
-      work_queue_name: default
