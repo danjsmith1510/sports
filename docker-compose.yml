@@ -9,10 +9,7 @@ services:
       PREFECT_UI_API_URL: http://159.13.44.223:4200/api
     command: >
       bash -c "
-        prefect server start --host 0.0.0.0 --port 4200 & 
-        sleep 30 &&
-        cd /app/sports &&
-        prefect deploy --prefect-file prefect.yaml
+        prefect server start --host 0.0.0.0 --port 4200
       "
     ports:
       - "4200:4200"
