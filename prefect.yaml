@@ -5,3 +5,17 @@ deployments:
     work_pool:
       name: docker-agent-pool
       work_queue_name: default
+    environment:
+      conn_str_sports: ${conn_str_sports}
+      teams_wnba: ${teams_wnba}
+      rotowire_username: ${rotowire_username}
+      rotowire_password: ${rotowire_password}
+      league_active_nba: ${league_active_nba}
+      league_active_wnba: ${league_active_wnba}
+      external_league_id_nba: ${external_league_id_nba}
+      external_league_id_wnba: ${external_league_id_wnba}
+      internal_league_id_nba: ${internal_league_id_nba}
+      internal_league_id_wnba: ${internal_league_id_wnba}
+      current_season_nba: ${current_season_nba}
+      current_season_wnba: ${current_season_wnba}
+      current_combined_schedule_end_date: ${current_combined_schedule_end_date}

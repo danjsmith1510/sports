@@ -20,26 +20,23 @@ jobs:
           script: |
             cd sports-prefect/sports
             git pull origin main
+
+            echo "🛠️ Building and launching Prefect server"
             docker compose build
             docker compose up -d
 
-            echo "Waiting for Prefect server..."
+            echo "⏳ Waiting for Prefect server to be healthy"
             until curl -s http://127.0.0.1:4200/api/health | grep -E 'true|healthy'; do
-              echo "Waiting for Prefect server..."
+              echo "Waiting..."
               sleep 2
             done
-
+            
+            echo "🔁 Ensure work pool exists"
             prefect work-pool inspect docker-agent-pool || \
             prefect work-pool create -t docker docker-agent-pool
 
-            echo "Making env sync script executable"
-            chmod +x ../scripts/sync_env_to_work_pool.sh
-
-            echo "Syncing .env to work pool"
-            ../scripts/sync_env_to_work_pool.sh docker-agent-pool
-
-            echo "Deploying flows"
+            echo "🚀 Deploying flows (loads .env automatically)"
             prefect deploy --prefect-file prefect.yaml
 
-            echo "Starting worker"
+            echo "👷 Starting worker"
             prefect worker start --pool docker-agent-pool
