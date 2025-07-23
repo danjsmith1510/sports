@@ -24,8 +24,8 @@ jobs:
             docker compose up -d
 
             echo "Waiting for Prefect server..."
-            until curl -s http://127.0.0.1:4200/api/health | grep "healthy"; do
-              echo "Waiting..."
+            until curl -s http://127.0.0.1:4200/api/health | grep -E 'true|healthy'; do
+              echo "Waiting for Prefect server..."
               sleep 2
             done
 
