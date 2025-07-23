@@ -36,7 +36,7 @@ jobs:
               (prefect work-pool inspect docker-agent-pool || prefect work-pool create -t docker docker-agent-pool)"
 
             echo "🚀 Deploying flows"
-            docker exec prefect bash -c "cd /app && prefect deploy --prefect-file prefect.yaml"
+            docker exec prefect bash -c "prefect deploy --prefect-file prefect.yaml"
 
             echo "👷 Starting worker"
             docker exec -d prefect bash -c "prefect worker start --pool docker-agent-pool"
