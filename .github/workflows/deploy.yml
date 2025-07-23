@@ -16,9 +16,30 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           command_timeout: 60m
-          timeout: 60m 
+          timeout: 60m
           script: |
             cd sports-prefect/sports
             git pull origin main
             docker compose build
             docker compose up -d
+
+            echo "Waiting for Prefect server..."
+            until curl -s http://127.0.0.1:4200/api/health | grep "healthy"; do
+              echo "Waiting..."
+              sleep 2
+            done
+
+            prefect work-pool inspect docker-agent-pool || \
+            prefect work-pool create -t docker docker-agent-pool
+
+            echo "Making env sync script executable"
+            chmod +x ../scripts/sync_env_to_work_pool.sh
+
+            echo "Syncing .env to work pool"
+            ../scripts/sync_env_to_work_pool.sh docker-agent-pool
+
+            echo "Deploying flows"
+            prefect deploy --prefect-file prefect.yaml
+
+            echo "Starting worker"
+            prefect worker start --pool docker-agent-pool
