@@ -15,6 +15,21 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && apt-get clean
 
+# Install dependencies
+RUN apt-get update && apt-get install -y wget unzip curl gnupg2 libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 libxss1 libappindicator3-1 libasound2 libxtst6 xdg-utils fonts-liberation
+
+# Install Chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy install
+
+# Install matching ChromeDriver (version 124.0.6367.91 for example)
+ENV CHROMEDRIVER_VERSION=124.0.6367.91
+RUN wget -q https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    mv chromedriver /usr/local/bin/chromedriver && \
+    chmod +x /usr/local/bin/chromedriver && \
+    rm chromedriver_linux64.zip
+
 # Add Microsoft GPG key
 RUN mkdir -p /etc/apt/keyrings && \
     curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/keyrings/microsoft.gpg
@@ -25,20 +40,6 @@ RUN echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://pac
 
 # Install ODBC driver
 RUN apt-get update && ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql18 && apt-get clean
-
-# Install Chrome + ChromeDriver
-RUN apt-get update && apt-get install -y wget unzip curl gnupg
-RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
-    > /etc/apt/sources.list.d/google-chrome.list
-RUN apt-get update && apt-get install -y google-chrome-stable
-
-# Match ChromeDriver version to installed Chrome
-RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') && \
-    CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION) && \
-    curl -sS -O https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
-    unzip chromedriver_linux64.zip && \
-    mv chromedriver /usr/local/bin/ && chmod +x /usr/local/bin/chromedriver
 
 # Copy your local source code into the container (GitHub already pulled it to the VM)
 COPY . /app/sports
