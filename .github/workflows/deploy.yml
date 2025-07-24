@@ -23,6 +23,7 @@ jobs:
 
             echo "Removing existing Prefect server container"
             docker rm -f prefect
+            docker system prune -a --volumes --force
 
             echo "🛠️ Building and launching Prefect server"
             docker compose build
