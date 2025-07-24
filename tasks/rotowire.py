@@ -35,8 +35,10 @@ def fetch_projected_minutes(driver, url: str) -> pd.DataFrame:
 def get_projected_minutes(team_list):
 
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Uncomment to run in headless mode
-    chrome_options.add_argument("--disable-gpu")  # Optional: for Windows
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(options=chrome_options)
     login_rotowire(driver)
     
