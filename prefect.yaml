@@ -23,7 +23,7 @@ deployments:
     environment:
       conn_str_sports: ${conn_str_sports}
       teams_wnba: ${teams_wnba}
-      teams_wnba: ${teams_nba}
+      teams_nba: ${teams_nba}
       rotowire_username: ${rotowire_username}
       rotowire_password: ${rotowire_password}
       league_active_nba: ${league_active_nba}

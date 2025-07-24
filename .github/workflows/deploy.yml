@@ -21,6 +21,9 @@ jobs:
             cd sports-prefect/sports
             git pull origin main
 
+            echo "Removing existing Prefect server container"
+            docker rm -f prefect
+
             echo "🛠️ Building and launching Prefect server"
             docker compose build
             docker compose up -d
