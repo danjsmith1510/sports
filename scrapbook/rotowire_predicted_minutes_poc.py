@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(verbose=True, override=True)
 
 def fetch_projected_minutes(driver, url: str) -> pd.DataFrame:
     driver.get(url)
@@ -54,7 +54,6 @@ def main():
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Uncomment to run in headless mode
     chrome_options.add_argument("--disable-gpu")  # Optional: for Windows
-
     driver = webdriver.Chrome(options=chrome_options)
     login_rotowire(driver)
 
@@ -62,6 +61,8 @@ def main():
     for team in wnba_teams:
         url = f"https://www.rotowire.com/wnba/ajax/get-projected-minutes.php?team={team}"
         df = fetch_projected_minutes(driver, url)
+        print(url)
+        print(df.head())  # Print the first few rows of the dataframe for debugging
         all_dfs.append(df)
 
     driver.quit()

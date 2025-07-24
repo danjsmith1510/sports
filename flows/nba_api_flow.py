@@ -4,7 +4,7 @@ from prefect import flow
 from tasks.common.data_loading import usp_merge_reference_basketball, insert_bronze_extracts
 from tasks.nba_api import get_traditional_box_scores, get_date_ranges, get_players, get_schedule, get_teams_nba, get_teams_wnba, get_advanced_box_scores
 
-load_dotenv()
+load_dotenv(verbose=True, override=True)
 external_league_id_nba = os.environ.get("external_league_id_nba")
 external_league_id_wnba = os.environ.get("external_league_id_wnba")
 internal_league_id_nba = os.environ.get("internal_league_id_nba")
@@ -13,12 +13,11 @@ current_season_nba = os.environ.get("current_season_nba")
 current_season_wnba = os.environ.get("current_season_wnba")
 league_active_nba = os.environ.get("league_active_nba")
 league_active_wnba = os.environ.get("league_active_wnba")
-current_combined_schedule_end_date = os.environ.get("current_combined_schedule_end_date")
 
 @flow(log_prints=True)
 def nba_api_flow() -> str:
 
-    date_ranges = get_date_ranges(current_combined_schedule_end_date)    
+    date_ranges = get_date_ranges()    
     for key, value in date_ranges.items():
         print(f"{key}: {value}")
 

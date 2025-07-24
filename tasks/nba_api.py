@@ -20,12 +20,12 @@ def get_teams_wnba():
     return wnba_teams
 
 @task
-def get_date_ranges(current_combined_schedule_end_date: str):
+def get_date_ranges():
     today_et = dt.datetime.today().astimezone(pytz.timezone('US/Eastern')).date()
     date_range_dict = {}
     date_range_dict['today_et'] = today_et
     date_range_dict['schedule_start_date'] = today_et - dt.timedelta(days=1)
-    date_range_dict['schedule_end_date'] = dt.datetime.strptime(current_combined_schedule_end_date, "%Y-%m-%d").date()
+    date_range_dict['schedule_end_date'] = today_et + dt.timedelta(days=7)
     date_range_dict['boxscore_start_date'] = today_et - dt.timedelta(days=2)
     date_range_dict['boxscore_end_date'] = today_et
     return date_range_dict
