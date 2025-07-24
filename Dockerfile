@@ -9,22 +9,10 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     git \
-    unzip \
-    wget \
     apt-transport-https \
     unixodbc-dev \
     libssl3 \
     ca-certificates \
-    libglib2.0-0 \
-    libnss3 \
-    libgconf-2-4 \
-    libfontconfig1 \
-    libxss1 \
-    libappindicator3-1 \
-    libasound2 \
-    libxtst6 \
-    xdg-utils \
-    fonts-liberation \
     && apt-get clean
 
 # Add Microsoft GPG key
@@ -37,18 +25,6 @@ RUN echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://pac
 
 # Install ODBC driver
 RUN apt-get update && ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql18 && apt-get clean
-
-# 🟡 Install Google Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy install && \
-    rm google-chrome-stable_current_amd64.deb
-
-# 🟡 Install ChromeDriver (match Chrome v124.0.6367.91 — adjust if needed)
-RUN wget -q https://chromedriver.storage.googleapis.com/124.0.6367.91/chromedriver_linux64.zip && \
-    unzip chromedriver_linux64.zip && \
-    mv chromedriver /usr/local/bin/chromedriver && \
-    chmod +x /usr/local/bin/chromedriver && \
-    rm chromedriver_linux64.zip
 
 # Copy your local source code into the container (GitHub already pulled it to the VM)
 COPY . /app/sports
