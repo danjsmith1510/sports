@@ -6,14 +6,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
-    gnupg \
-    git \
-    apt-transport-https \
-    unixodbc-dev \
-    libssl3 \
-    ca-certificates \
-    && apt-get clean
+    wget unzip curl gnupg ca-certificates \
+    unixodbc-dev libssl3 libglib2.0-0 libnss3 libgconf-2-4 \
+    libfontconfig1 libxss1 libappindicator3-1 libasound2 libxtst6 \
+    xdg-utils fonts-liberation \
+  && apt-get clean
+
+# Install Chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy install && \
+    rm google-chrome-stable_current_amd64.deb
 
 # Add Microsoft GPG key
 RUN mkdir -p /etc/apt/keyrings && \

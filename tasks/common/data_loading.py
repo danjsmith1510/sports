@@ -5,7 +5,7 @@ if not conn_str:
     raise ValueError("Missing 'conn_str_sports' in environment variables.")
 
 def insert_bronze_extracts(extract_type: str, json_str: str):
-    with pyodbc.connect(conn_str) as conn:
+    with pyodbc.connect(conn_str, timeout=180) as conn:
         with conn.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO [bronze].[extracts]([extract_type],[extract_data]) VALUES (?, ?)",

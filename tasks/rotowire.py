@@ -4,8 +4,10 @@ import time
 import pandas as pd
 from prefect import task
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 def login_rotowire(driver):
     """Logs into Rotowire using credentials from environment variables."""
@@ -39,7 +41,8 @@ def get_projected_minutes(team_list):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
-    driver = webdriver.Chrome(options=chrome_options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     login_rotowire(driver)
     
     all_dfs = []
