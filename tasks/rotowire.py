@@ -37,10 +37,11 @@ def fetch_projected_minutes(driver, url: str) -> pd.DataFrame:
 def get_projected_minutes(team_list):
 
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--headless")  # Enable headless mode
+    chrome_options.add_argument("--no-sandbox")  # Required for Docker
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Avoid limited /dev/shm size
+    chrome_options.add_argument("--disable-gpu")  # Optional but helpful
+    chrome_options.add_argument("--remote-debugging-port=9222")  # Prevent DevToolsActivePort error
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     login_rotowire(driver)
