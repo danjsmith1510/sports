@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
 def login_rotowire(driver):
+    print("Logging into Rotowire...")
     """Logs into Rotowire using credentials from environment variables."""
     driver.get("https://www.rotowire.com/subscribe/login/")
     time.sleep(10) 
@@ -35,7 +36,7 @@ def fetch_projected_minutes(driver, url: str) -> pd.DataFrame:
 
 @task
 def get_projected_minutes(team_list):
-
+    print("Setting up Chrome driver...")
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Enable headless mode
     chrome_options.add_argument("--no-sandbox")  # Required for Docker
@@ -45,9 +46,10 @@ def get_projected_minutes(team_list):
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     login_rotowire(driver)
-    
+    print("Logged into Rotowire successfully.")
     all_dfs = []
     for team in team_list:
+        print (f"Fetching projected minutes for team: {team}")
         url = f"https://www.rotowire.com/wnba/ajax/get-projected-minutes.php?team={team}"
         print (url)
         df = fetch_projected_minutes(driver, url)
