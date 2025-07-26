@@ -1,61 +1,57 @@
 from io import StringIO
 import os
-import time
+import asyncio
 import pandas as pd
 from prefect import task
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from playwright.async_api import async_playwright
 
-def login_rotowire(driver):
-    print("Logging into Rotowire...")
-    """Logs into Rotowire using credentials from environment variables."""
-    driver.get("https://www.rotowire.com/subscribe/login/")
-    time.sleep(10) 
+async def login_rotowire(page):
+    print("🔐 Starting login to Rotowire...")
+    
+    print("🌐 Navigating to login page...")
+    await page.goto("https://www.rotowire.com/subscribe/login/")
+    
+    print("🧾 Filling in username...")
+    await page.fill('input[placeholder="Enter username or email"]', os.environ.get("rotowire_username", ""))
+    
+    print("🔒 Filling in password...")
+    await page.fill('input[placeholder="Enter your password"]', os.environ.get("rotowire_password", ""))
+    
+    print("➡️ Clicking login button...")
+    await page.click('button:has-text("Login")')
+    
+    print("⏳ Waiting for log in to complete...")
+    await page.wait_for_selector('button.rwnav-top-account')
+    
+    print("✅ Login completed successfully.")
 
-    userNameElement = driver.find_element(By.XPATH, '//input[@placeholder="Enter username or email"]')
-    userNameElement.send_keys(os.environ.get("rotowire_username", ""))
-
-    passwordElement = driver.find_element(By.XPATH, '//input[@placeholder="Enter your password"]')
-    passwordElement.send_keys(os.environ.get("rotowire_password", ""))
-
-    time.sleep(2)
-
-    loginButton = driver.find_element(By.XPATH, '//button[normalize-space(text())="Login"]')
-    loginButton.click()
-
-    time.sleep(5)  
-
-def fetch_projected_minutes(driver, url: str) -> pd.DataFrame:
-    driver.get(url)
-    time.sleep(3)
-    response_text = driver.find_element(By.XPATH, "/html/body/pre").text
-    return pd.read_json(StringIO(response_text))
+async def fetch_projected_minutes(page, url: str) -> pd.DataFrame:
+    await page.goto(url)
+    pre = await page.text_content("body > pre")
+    return pd.read_json(StringIO(pre))
 
 @task
 def get_projected_minutes(team_list):
+    print("Launching Playwright...")
 
-    print("Setting up Chrome driver...")
-    chrome_options = Options()
-    chrome_options.binary_location = '/usr/bin/chromium'
-    chrome_options.add_argument('--headless=new')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument("--disable-gpu")  # Optional but helpful
-    chrome_options.add_argument("--remote-debugging-port=9222")  # Prevent DevToolsActivePort error
-    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=chrome_options)
-    login_rotowire(driver)
-    print("Logged into Rotowire successfully.")
-    all_dfs = []
-    for team in team_list:
-        print (f"Fetching projected minutes for team: {team}")
-        url = f"https://www.rotowire.com/wnba/ajax/get-projected-minutes.php?team={team}"
-        print (url)
-        df = fetch_projected_minutes(driver, url)
-        all_dfs.append(df)
-    driver.quit()
+    async def run():
+        async with async_playwright() as p:
+            browser = await p.chromium.launch() #headless=True
+            context = await browser.new_context()
+            page = await context.new_page()
 
-    combined_df = pd.concat(all_dfs, ignore_index=True)
+            await login_rotowire(page)
+            print("Logged into Rotowire successfully.")
 
-    return combined_df.to_json(orient="records")
+            all_dfs = []
+            for team in team_list:
+                print(f"Fetching projected minutes for team: {team}")
+                url = f"https://www.rotowire.com/wnba/ajax/get-projected-minutes.php?team={team}"
+                df = await fetch_projected_minutes(page, url)
+                all_dfs.append(df)
+
+            await browser.close()
+            combined_df = pd.concat(all_dfs, ignore_index=True)
+            return combined_df.to_json(orient="records")
+
+    return asyncio.run(run())

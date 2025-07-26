@@ -1,19 +1,14 @@
-# ===============================
-# ✅ DOCKERFILE (stable + headless selenium setup)
-# ===============================
 FROM python:3.13.5-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies
+# Install system and Playwright dependencies
 RUN apt-get update && apt-get install -y \
-    wget unzip curl gnupg ca-certificates \
-    libglib2.0-0 libnss3 libgconf-2-4 \
-    libfontconfig1 libxss1 libappindicator3-1 libasound2 libxtst6 \
-    xdg-utils fonts-liberation \
-    libu2f-udev \
-    chromium \
-    chromium-driver \
+    curl wget gnupg ca-certificates \
+    libglib2.0-0 libnss3 libgconf-2-4 libxss1 libappindicator3-1 \
+    libasound2 libatk-bridge2.0-0 libgtk-3-0 libx11-xcb1 \
+    libxcb1 libxcomposite1 libxdamage1 libxi6 \
+    libfontconfig1 xdg-utils fonts-liberation \
     && apt-get clean
 
 # Add Microsoft GPG key
@@ -25,14 +20,16 @@ RUN echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://pac
     > /etc/apt/sources.list.d/mssql-release.list
 
 # Install ODBC driver
-RUN apt-get update && ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql18 unixodbc-dev libssl3 && apt-get clean
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
+    msodbcsql18 unixodbc-dev libssl3 && apt-get clean
 
-# Set environment variable to locate the correct driver
-ENV CHROMEDRIVER_PATH=/usr/lib/chromium/chromedriver
-
-# Copy source
+# Copy your app code
 COPY . /app/sports
 WORKDIR /app/sports
 
-# Install Python deps
+# Install Python packages
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Playwright + dependencies
+RUN playwright install --with-deps
