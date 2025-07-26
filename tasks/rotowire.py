@@ -38,12 +38,13 @@ def get_projected_minutes(team_list):
 
     print("Setting up Chrome driver...")
     chrome_options = Options()
+    chrome_options.binary_location = '/usr/bin/chromium'
     chrome_options.add_argument('--headless=new')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument("--disable-gpu")  # Optional but helpful
     chrome_options.add_argument("--remote-debugging-port=9222")  # Prevent DevToolsActivePort error
-    driver = webdriver.Chrome(service=Service("/usr/lib/chromium/chromedriver"), options=chrome_options)
+    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=chrome_options)
     login_rotowire(driver)
     print("Logged into Rotowire successfully.")
     all_dfs = []
