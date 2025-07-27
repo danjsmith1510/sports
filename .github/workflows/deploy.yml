@@ -13,17 +13,32 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
 
-    - name: SSH into VM and deploy flows
+    - name: SSH and deploy to GCP VM
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
+        port: 22
         script: |
-          cd sports
+          # Ensure repo is up to date
+          cd ~/sports || git clone https://github.com/danjsmith1510/sports.git && cd sports
           git pull
+
+          # Create venv if it doesn't exist
+          if [ ! -d "~/venv-prefect" ]; then
+            python3 -m venv ~/venv-prefect
+          fi
+
+          # Activate venv
           source ~/venv-prefect/bin/activate
+
+          # Upgrade pip and install dependencies
+          pip install --upgrade pip
           pip install -r requirements.txt
+
+          # Set Prefect server URL
+          export PREFECT_API_URL=http://34.19.3.21:4200/api
 
           # Restart agent (if running in screen)
           screen -S agent -X quit
@@ -33,3 +48,6 @@ jobs:
           screen -S server -X quit
           screen -dmS server prefect server start --host 0.0.0.0
           prefect deploy -p prefect.yaml
+
+          # Deploy flows
+          prefect deploy -p prefect.yaml --all
