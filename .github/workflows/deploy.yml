@@ -47,7 +47,7 @@ jobs:
           echo "Server started"
 
           echo "Create work pool if it doesn't exist"
-          prefect work-pool inspect default-agent-pool || prefect work-pool create -t process default-agent-pool
+          prefect work-pool inspect default-agent-pool || prefect work-pool create -t --overwrite process default-agent-pool
           echo "Create work pool if it doesn't exist complete"
 
           echo "Deploying flows"
