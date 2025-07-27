@@ -27,3 +27,11 @@ def usp_merge_reference_basketball(league_id: str, current_season: str = None):
             cursor.execute("exec [dbo].[usp_merge_reference_basketball] ?, ?", league_id, current_season)
         conn.commit()
         print("exec dbo.usp_merge_reference_basketball " + league_id + " executed successfully")
+
+@task(retries=5, retry_delay_seconds=5)
+def usp_merge_projections_basketball(league_id: str):
+    with pyodbc.connect(conn_str) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("exec [dbo].[usp_merge_projections_basketball] ?", league_id)
+        conn.commit()
+        print("exec dbo.usp_merge_projections_basketball " + league_id + " executed successfully")

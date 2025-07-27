@@ -1,4 +1,4 @@
-import datetime as dt, pytz, time
+import datetime as dt, time
 from prefect import task
 from nba_api.stats.endpoints import playerindex, scoreboardv2, boxscoretraditionalv3, BoxScoreAdvancedV2
 from nba_api.stats.static.teams import get_teams, get_wnba_teams
@@ -18,17 +18,6 @@ def get_teams_nba():
 def get_teams_wnba():
     wnba_teams =  get_wnba_teams()
     return wnba_teams
-
-@task
-def get_date_ranges():
-    today_et = dt.datetime.today().astimezone(pytz.timezone('US/Eastern')).date()
-    date_range_dict = {}
-    date_range_dict['today_et'] = today_et
-    date_range_dict['schedule_start_date'] = today_et - dt.timedelta(days=1)
-    date_range_dict['schedule_end_date'] = today_et + dt.timedelta(days=7)
-    date_range_dict['boxscore_start_date'] = today_et - dt.timedelta(days=2)
-    date_range_dict['boxscore_end_date'] = today_et
-    return date_range_dict
 
 @task
 def get_schedule(schedule_start_date, schedule_end_date, league_id):

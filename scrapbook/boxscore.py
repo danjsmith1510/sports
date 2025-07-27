@@ -2,7 +2,7 @@ import json
 import time, pytz
 import datetime as dt
 from nba_api.stats.endpoints import  boxscoretraditionalv3, scoreboardv2
-from tasks.common.data_loading import insert_bronze_extracts
+from tasks.common.database import insert_bronze_extracts
 
 def xget_date_ranges():
     date_range_dict = {}
