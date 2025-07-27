@@ -36,7 +36,7 @@ def nba_api_flow() -> str:
         print(f"Got {len(nba_schedule)} nba games")  
         insert_bronze_extracts("schedule-nba", json.dumps(nba_schedule))
 
-        usp_merge_reference_basketball(internal_league_id_nba)
+        usp_merge_reference_basketball(internal_league_id_nba, current_season_nba)
 
     if (league_active_wnba == "False"):
         print("WNBA league is not active, skipping WNBA data extraction")
@@ -64,7 +64,7 @@ def nba_api_flow() -> str:
         insert_bronze_extracts("adv-team-boxscore-wnba", json.dumps(advanced_box_score_list[0]))
         insert_bronze_extracts("adv-player-boxscore-wnba", json.dumps(advanced_box_score_list[1]))
 
-        usp_merge_reference_basketball(internal_league_id_wnba)
+        usp_merge_reference_basketball(internal_league_id_wnba, current_season_wnba)
 
     return "NBA_API Flow completed successfully"
 
