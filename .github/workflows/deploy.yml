@@ -56,7 +56,7 @@ jobs:
 
           echo "Starting worker"
           screen -S agent -X quit
-          screen -dmS agent prefect worker start --pool 'default-agent-pool''
+          screen -dmS agent prefect worker start --overwrite --pool 'default-agent-pool''
           echo "Worker started"
 
           echo "Deployment complete"
