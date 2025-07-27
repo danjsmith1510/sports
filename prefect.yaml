@@ -3,7 +3,7 @@ deployments:
   - name: nba_api_flow
     entrypoint: flows/nba_api_flow.py:nba_api_flow
     work_pool:
-      name: docker-agent-pool
+      name: default-agent-pool
       work_queue_name: default
     environment:
       conn_str_sports: ${conn_str_sports}
@@ -18,7 +18,7 @@ deployments:
   - name: rotowire_flow
     entrypoint: flows/rotowire_flow.py:rotowire_flow
     work_pool:
-      name: docker-agent-pool
+      name: default-agent-pool
       work_queue_name: default
     environment:
       conn_str_sports: ${conn_str_sports}
