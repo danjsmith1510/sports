@@ -44,16 +44,19 @@ jobs:
           echo "Starting server"
           screen -S server -X quit
           screen -dmS server prefect server start --host 0.0.0.0
+          echo "Server started"
 
-          echo "Ensure work pool exists"
+          echo "Create work pool if it doesn't exist"
           prefect work-pool inspect default-agent-pool || prefect work-pool create -t process default-agent-pool
+          echo "Create work pool if it doesn't exist complete"
 
           echo "Deploying flows"
           prefect deploy --prefect-file prefect.yaml --all
+          echo "Flows deployed"
 
           echo "Starting worker"
           screen -S agent -X quit
-          screen -dmS agent prefect agent start --pool 'default-agent-pool'
+          screen -dmS agent prefect worker start --pool 'default-agent-pool''
           echo "Worker started"
 
           echo "Deployment complete"
