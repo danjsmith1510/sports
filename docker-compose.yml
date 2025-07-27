@@ -1,0 +1,21 @@
+services:
+  prefect:
+    build: .
+    container_name: prefect
+    env_file:
+      - .env
+    environment:
+      PREFECT_API_URL: http://0.0.0.0:4200/api
+      PREFECT_UI_API_URL: http://159.13.44.223:4200/api
+    command: >
+      bash -c "
+        prefect server start --host 0.0.0.0 --port 4200
+      "
+    ports:
+      - "4200:4200"
+    volumes:
+      - prefect_home:/root/.prefect
+    restart: unless-stopped
+
+volumes:
+  prefect_home:

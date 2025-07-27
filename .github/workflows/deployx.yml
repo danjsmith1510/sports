@@ -1,0 +1,48 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Oracle VM via SSH
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          command_timeout: 60m
+          timeout: 60m
+          script: |
+            cd sports-prefect/sports
+            git pull origin main
+
+            echo "Removing existing Prefect server container"
+            docker rm -f prefect
+            docker system prune -a --volumes --force
+
+            echo "🛠️ Building and launching Prefect server"
+            docker compose build
+            docker compose up -d
+
+            echo "⏳ Waiting for Prefect server to be healthy"
+            until curl -s http://127.0.0.1:4200/api/health | grep -E 'true|healthy'; do
+              echo "Waiting..."
+              sleep 2
+            done
+
+            echo "🔁 Ensure work pool exists"
+            docker exec prefect bash -c "(prefect work-pool inspect docker-agent-pool || prefect work-pool create -t process docker-agent-pool)"
+
+            echo "🚀 Deploying flows"
+            docker exec prefect bash -c "prefect deploy --prefect-file prefect.yaml --all"
+
+            echo "👷 Starting worker"
+            docker exec -d prefect bash -c "prefect worker start --pool docker-agent-pool"
+            echo "✅ Worker started"
+
+            echo "✅ Deployment complete"
