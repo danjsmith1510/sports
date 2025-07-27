@@ -36,7 +36,7 @@ jobs:
           # Upgrade pip and install dependencies
           pip install --upgrade pip
           pip install -r requirements.txt
-          playwright install chromium --with-deps
+          sudo playwright install chromium --with-deps
 
           # Set Prefect server URL
           export PREFECT_API_URL=http://34.19.3.21:4200/api
@@ -46,10 +46,10 @@ jobs:
           screen -dmS server prefect server start --host 0.0.0.0
 
           echo "Ensure work pool exists"
-          prefect work-pool inspect default-agent-pool || prefect work-pool create -t process default-agent-pool"
+          prefect work-pool inspect default-agent-pool || prefect work-pool create -t process default-agent-pool
 
           echo "Deploying flows"
-          docker exec prefect bash -c "prefect deploy --prefect-file prefect.yaml --all"
+          prefect deploy --prefect-file prefect.yaml --all
 
           echo "Starting worker"
           screen -S agent -X quit
