@@ -1,7 +1,7 @@
 import json, os
 from dotenv import load_dotenv
 from prefect import flow
-from tasks.common.database import usp_merge_reference_basketball, insert_bronze_extracts
+from tasks.common.database import usp_batch_load_stats, insert_bronze_extracts
 from tasks.common.utils import get_date_ranges
 from tasks.nba_api import get_traditional_box_scores, get_players, get_schedule, get_teams_nba, get_teams_wnba, get_advanced_box_scores
 
@@ -16,7 +16,7 @@ league_active_nba = os.environ.get("league_active_nba")
 league_active_wnba = os.environ.get("league_active_wnba")
 
 @flow(log_prints=True)
-def nba_api_flow() -> str:
+def stats_flow() -> str:
 
     date_ranges = get_date_ranges()    
     for key, value in date_ranges.items():
@@ -37,7 +37,7 @@ def nba_api_flow() -> str:
         print(f"Got {len(nba_schedule)} nba games")  
         insert_bronze_extracts("schedule-nba", json.dumps(nba_schedule))
 
-        usp_merge_reference_basketball(internal_league_id_nba, current_season_nba)
+        usp_batch_load_stats(internal_league_id_nba, current_season_nba)
 
     if (league_active_wnba == "False"):
         print("WNBA league is not active, skipping WNBA data extraction")
@@ -65,9 +65,9 @@ def nba_api_flow() -> str:
         insert_bronze_extracts("adv-team-boxscore-wnba", json.dumps(advanced_box_score_list[0]))
         insert_bronze_extracts("adv-player-boxscore-wnba", json.dumps(advanced_box_score_list[1]))
 
-        usp_merge_reference_basketball(internal_league_id_wnba, current_season_wnba)
+        usp_batch_load_stats(internal_league_id_wnba, current_season_wnba)
 
-    return "NBA_API Flow completed successfully"
+    return "nba_stats_flow completed successfully"
 
 if __name__ == "__main__":
-    nba_api_flow()
+    stats_flow()

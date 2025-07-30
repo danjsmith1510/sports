@@ -1,7 +1,7 @@
 prefect-version: 3
 deployments:
-  - name: nba_api_flow
-    entrypoint: flows/nba_api_flow.py:nba_api_flow
+  - name: stats_flow
+    entrypoint: flows/stats_flow.py:stats_flow
     work_pool:
       name: default-agent-pool
       work_queue_name: default
@@ -16,7 +16,7 @@ deployments:
       current_season_nba: ${current_season_nba}
       current_season_wnba: ${current_season_wnba}
   - name: rotowire_flow
-    entrypoint: flows/rotowire_flow.py:rotowire_flow
+    entrypoint: flows/projections_flow.py:projections_flow
     work_pool:
       name: default-agent-pool
       work_queue_name: default

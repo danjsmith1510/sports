@@ -1,7 +1,7 @@
 import json, os
 from dotenv import load_dotenv
 from prefect import flow
-from tasks.common.database import insert_bronze_extracts, usp_merge_projections_basketball
+from tasks.common.database import insert_bronze_extracts, usp_batch_load_projections
 from tasks.common.utils import get_date_ranges
 from tasks.rotowire import get_projected_minutes, get_projected_statistics
 
@@ -20,7 +20,7 @@ internal_league_id_nba = os.environ.get("internal_league_id_nba")
 internal_league_id_wnba = os.environ.get("internal_league_id_wnba")
 
 @flow(log_prints=True)
-def rotowire_flow() -> str:
+def projections_flow() -> str:
 
     date_ranges = get_date_ranges()
     current_date_est = date_ranges['today_et'].strftime('%Y-%m-%d')
@@ -36,7 +36,7 @@ def rotowire_flow() -> str:
         print(f"Got projected statistics - todays games - {len(projected_statistics_list_nba)} nba players")  
         insert_bronze_extracts("projected-stats-nba", projected_statistics_list_nba)
 
-        usp_merge_projections_basketball(internal_league_id_nba)
+        usp_batch_load_projections(internal_league_id_nba)
 
     if (league_active_wnba == "False"):
         print("WNBA league is not active, skipping projected minutes extraction")
@@ -49,9 +49,9 @@ def rotowire_flow() -> str:
         print(f"Got projected statistics - todays games - {len(projected_statistics_list_wnba)} wnba players")  
         insert_bronze_extracts("projected-stats-wnba", projected_statistics_list_wnba)
 
-        usp_merge_projections_basketball(internal_league_id_wnba)
+        usp_batch_load_projections(internal_league_id_wnba)
 
     return "Rotowire flow completed successfully"
 
 if __name__ == "__main__":
-    rotowire_flow()
+    projections_flow()

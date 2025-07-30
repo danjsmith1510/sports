@@ -7,12 +7,18 @@ from tasks.common.database import insert_bronze_extracts
 def xget_date_ranges():
     date_range_dict = {}
     date_range_dict['today_et'] = dt.datetime.today().astimezone(pytz.timezone('US/Eastern')).date()
-    date_range_dict['boxscore_start_date'] = dt.date(year=2021, month=5, day=1)
-    date_range_dict['boxscore_end_date'] = dt.date(year=2021, month=10, day=18) 
+    date_range_dict['boxscore_start_date'] = dt.date(year=2024, month=10, day=3)
+    date_range_dict['boxscore_end_date'] = dt.date(year=2024, month=11, day=30) 
     return date_range_dict
 
+# season	PRE_SEASON_START	PLAYOFFS_END
+# 2024	2024-10-04	2025-06-22
+# 2023	2023-10-05	2025-06-17
+# 2022	2022-09-30	2023-06-12
+# 2021	2021-10-03	2022-06-16
+
 def get_schedule_nba(schedule_start_date, schedule_end_date):
-    league_id = "10"  # WNBA
+    league_id = "00"  # WNBA
     game_list=[]
     current_date = schedule_start_date
     while current_date <= schedule_end_date:

@@ -21,17 +21,17 @@ def insert_bronze_extracts(extract_type: str, json_str: str):
         print(f"INSERT INTO [bronze].[extracts] - {extract_type} executed successfully ")
 
 @task(retries=5, retry_delay_seconds=5)
-def usp_merge_reference_basketball(league_id: str, current_season: str = None):
+def usp_batch_load_stats(league_id: str, current_season: str = None):
     with pyodbc.connect(conn_str) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("exec [dbo].[usp_merge_reference_basketball] ?, ?", league_id, current_season)
+            cursor.execute("exec [dbo].[usp_batch_load_stats] ?, ?", league_id, current_season)
         conn.commit()
-        print("exec dbo.usp_merge_reference_basketball " + league_id + " executed successfully")
+        print("exec dbo.usp_batch_load_stats " + league_id + " executed successfully")
 
 @task(retries=5, retry_delay_seconds=5)
-def usp_merge_projections_basketball(league_id: str):
+def usp_batch_load_projections(league_id: str):
     with pyodbc.connect(conn_str) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("exec [dbo].[usp_merge_projections_basketball] ?", league_id)
+            cursor.execute("exec [dbo].[usp_batch_load_projections] ?", league_id)
         conn.commit()
-        print("exec dbo.usp_merge_projections_basketball " + league_id + " executed successfully")
+        print("exec dbo.usp_batch_load_projections " + league_id + " executed successfully")
