@@ -15,7 +15,7 @@ deployments:
       internal_league_id_wnba: ${internal_league_id_wnba}
       current_season_nba: ${current_season_nba}
       current_season_wnba: ${current_season_wnba}
-  - name: rotowire_flow
+  - name: projections_flow
     entrypoint: flows/projections_flow.py:projections_flow
     work_pool:
       name: default-agent-pool
