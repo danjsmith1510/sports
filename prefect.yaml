@@ -28,3 +28,5 @@ deployments:
       rotowire_password: ${rotowire_password}
       league_active_nba: ${league_active_nba}
       league_active_wnba: ${league_active_wnba}
+      current_season_nba: ${current_season_nba}
+      current_season_wnba: ${current_season_wnba}

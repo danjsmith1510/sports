@@ -29,9 +29,9 @@ def usp_batch_load_stats(league_id: str, current_season: str = None):
         print("exec dbo.usp_batch_load_stats " + league_id + " executed successfully")
 
 @task(retries=5, retry_delay_seconds=5)
-def usp_batch_load_projections(league_id: str):
+def usp_batch_load_projections(league_id: str, current_season: str = None, current_date_est: str = None):
     with pyodbc.connect(conn_str) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("exec [dbo].[usp_batch_load_projections] ?", league_id)
+            cursor.execute("exec [dbo].[usp_batch_load_projections] ?, ?, ?", league_id, current_season, current_date_est)
         conn.commit()
         print("exec dbo.usp_batch_load_projections " + league_id + " executed successfully")

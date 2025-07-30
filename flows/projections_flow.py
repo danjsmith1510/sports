@@ -18,6 +18,8 @@ rotowire_url_stats_wnba = os.environ.get("rotowire_url_stats_wnba")
 rotowire_url_stats_nba = os.environ.get("rotowire_url_stats_nba")
 internal_league_id_nba = os.environ.get("internal_league_id_nba")
 internal_league_id_wnba = os.environ.get("internal_league_id_wnba")
+current_season_nba = os.environ.get("current_season_nba")
+current_season_wnba = os.environ.get("current_season_wnba")
 
 @flow(log_prints=True)
 def projections_flow() -> str:
@@ -36,7 +38,7 @@ def projections_flow() -> str:
         print(f"Got projected statistics - todays games - {len(projected_statistics_list_nba)} nba players")  
         insert_bronze_extracts("projected-stats-nba", projected_statistics_list_nba)
 
-        usp_batch_load_projections(internal_league_id_nba)
+        usp_batch_load_projections(internal_league_id_nba, current_season_nba, current_date_est)
 
     if (league_active_wnba == "False"):
         print("WNBA league is not active, skipping projected minutes extraction")
@@ -49,7 +51,7 @@ def projections_flow() -> str:
         print(f"Got projected statistics - todays games - {len(projected_statistics_list_wnba)} wnba players")  
         insert_bronze_extracts("projected-stats-wnba", projected_statistics_list_wnba)
 
-        usp_batch_load_projections(internal_league_id_wnba)
+        usp_batch_load_projections(internal_league_id_wnba, current_season_wnba, current_date_est)
 
     return "Rotowire flow completed successfully"
 
