@@ -41,14 +41,31 @@ jobs:
           # Set Prefect server URL
           export PREFECT_API_URL=http://34.19.3.21:4200/api
 
-          echo "Starting server"
-          screen -S server -X quit
+          echo "🚀 Starting Prefect server in background"
           screen -dmS server prefect server start --host 0.0.0.0
-          echo "Server started"
 
-          echo "Deploying flows"
+          echo "⏳ Waiting for server to become healthy..."
+          # Set max wait time (e.g. 60s) and polling interval
+          timeout=60
+          interval=5
+          elapsed=0
+
+          while ! curl -s http://localhost:4200/api/health | grep -q "true"; do
+              sleep $interval
+              elapsed=$((elapsed + interval))
+              echo "⏳ Waiting... ($elapsed/$timeout seconds)"
+
+              if [ "$elapsed" -ge "$timeout" ]; then
+                  echo "❌ Server did not start in time."
+                  exit 1
+              fi
+          done
+
+          echo "✅ Server is up!"
+
+          echo "🚀 Deploying flows"
           prefect deploy --prefect-file prefect.yaml --all
-          echo "Flows deployed"
+          echo "✅ Flows deployed"
 
           echo "Starting worker"
           screen -S agent -X quit

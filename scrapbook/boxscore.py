@@ -8,7 +8,7 @@ def xget_date_ranges():
     date_range_dict = {}
     date_range_dict['today_et'] = dt.datetime.today().astimezone(pytz.timezone('US/Eastern')).date()
     date_range_dict['boxscore_start_date'] = dt.date(year=2024, month=10, day=3)
-    date_range_dict['boxscore_end_date'] = dt.date(year=2024, month=11, day=30) 
+    date_range_dict['boxscore_end_date'] = dt.date(year=2024, month=10, day=31) 
     return date_range_dict
 
 # season	PRE_SEASON_START	PLAYOFFS_END
