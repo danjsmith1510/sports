@@ -12,7 +12,10 @@ def xget_date_ranges():
     return date_range_dict
 
 # season	PRE_SEASON_START	PLAYOFFS_END
-# 2021	2021-05-01	2021-10-17
+# 2024	2024-10-04	2025-06-22
+# 2023	2023-10-05	2025-06-17
+# 2022	2022-09-30	2023-06-12
+# 2021	2021-10-03	2022-06-16
 
 def get_schedule_nba(schedule_start_date, schedule_end_date):
     league_id = "10"  # WNBA

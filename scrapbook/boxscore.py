@@ -7,13 +7,12 @@ from tasks.common.database import insert_bronze_extracts
 def xget_date_ranges():
     date_range_dict = {}
     date_range_dict['today_et'] = dt.datetime.today().astimezone(pytz.timezone('US/Eastern')).date()
-    date_range_dict['boxscore_start_date'] = dt.date(year=2024, month=10, day=3)
-    date_range_dict['boxscore_end_date'] = dt.date(year=2024, month=10, day=31) 
+    date_range_dict['boxscore_start_date'] = dt.date(year=2023, month=10, day=4)
+    date_range_dict['boxscore_end_date'] = dt.date(year=2023, month=10, day=31) 
     return date_range_dict
 
 # season	PRE_SEASON_START	PLAYOFFS_END
-# 2024	2024-10-04	2025-06-22
-# 2023	2023-10-05	2025-06-17
+# 2023	2023-10-05	2024-06-17
 # 2022	2022-09-30	2023-06-12
 # 2021	2021-10-03	2022-06-16
 
@@ -47,7 +46,7 @@ for game in game_list:
         try:
             box_score_raw = boxscoretraditionalv3.BoxScoreTraditionalV3(game_id=game['GAME_ID'], timeout=180)
             box_score = box_score_raw.get_dict()['boxScoreTraditional']
-            box_score['league_id'] = 2
+            box_score['league_id'] = 1
             box_score_list.append(box_score)
             time.sleep(1.5)
         except AttributeError:
@@ -55,7 +54,7 @@ for game in game_list:
     gameCounter += 1
 
 print (len(box_score_list), "box scores retrieved")
-insert_bronze_extracts('boxscore-wnba', json.dumps(box_score_list))
+insert_bronze_extracts('boxscore-nba', json.dumps(box_score_list))
 
 # box_score_list = []
 # for game in game_list:

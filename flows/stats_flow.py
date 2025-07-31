@@ -37,7 +37,18 @@ def stats_flow() -> str:
         print(f"Got {len(nba_schedule)} nba games")  
         insert_bronze_extracts("schedule-nba", json.dumps(nba_schedule))
 
-        usp_batch_load_stats(internal_league_id_nba, current_season_nba)
+        nba_box_scores_to_get = get_schedule(date_ranges['boxscore_start_date'], date_ranges['boxscore_end_date'], external_league_id_nba)
+
+        traditional_box_score_list = get_traditional_box_scores(nba_box_scores_to_get)
+        print(f"Got {len(traditional_box_score_list)} traditional nba box scores")  
+        insert_bronze_extracts("boxscore-nba", json.dumps(traditional_box_score_list))
+
+        advanced_box_score_list = get_advanced_box_scores(nba_box_scores_to_get)
+        print(f"Got {len(advanced_box_score_list[0]) + len(advanced_box_score_list[1])} advanced nba box scores")  
+        insert_bronze_extracts("adv-team-boxscore-nba", json.dumps(advanced_box_score_list[0]))
+        insert_bronze_extracts("adv-player-boxscore-nba", json.dumps(advanced_box_score_list[1]))
+
+        usp_batch_load_stats(internal_league_id_wnba, current_season_wnba)
 
     if (league_active_wnba == "False"):
         print("WNBA league is not active, skipping WNBA data extraction")
@@ -61,7 +72,7 @@ def stats_flow() -> str:
         insert_bronze_extracts("boxscore-wnba", json.dumps(traditional_box_score_list))
 
         advanced_box_score_list = get_advanced_box_scores(wnba_box_scores_to_get)
-        print(f"Got {len(advanced_box_score_list)} advanced wnba box scores")  
+        print(f"Got {len(advanced_box_score_list[0]) + len(advanced_box_score_list[1])} advanced wnba box scores")  
         insert_bronze_extracts("adv-team-boxscore-wnba", json.dumps(advanced_box_score_list[0]))
         insert_bronze_extracts("adv-player-boxscore-wnba", json.dumps(advanced_box_score_list[1]))
 

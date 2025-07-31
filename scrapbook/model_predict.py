@@ -11,7 +11,7 @@ feature_cols = joblib.load("models/wnba_feature_columns.joblib")
 # Connection string
 conn_str = (
     "Driver={ODBC Driver 18 for SQL Server};"
-    "Server=tcp:danieljsmith1510-sql.database.windows.net,1433;"
+    "Server=tcp:35.197.174.203,1433;"
     "Database=danieljsmith1510;"
     "Uid=dan;"
     "Pwd=Ernie2022;"

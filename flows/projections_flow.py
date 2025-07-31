@@ -53,7 +53,7 @@ def projections_flow() -> str:
 
         usp_batch_load_projections(internal_league_id_wnba, current_season_wnba, current_date_est)
 
-    return "Rotowire flow completed successfully"
+    return "projections_flow flow completed successfully"
 
 if __name__ == "__main__":
     projections_flow()
