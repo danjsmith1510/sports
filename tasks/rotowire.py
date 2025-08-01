@@ -34,7 +34,7 @@ async def fetch_projected_statistics(page, url: str) -> pd.DataFrame:
     pre = await page.text_content("body > pre")
     return pd.read_json(StringIO(pre))
 
-@task
+@task(retries=5, retry_delay_seconds=5)
 def get_projected_minutes(team_list, url):
     print("Launching Playwright...")
 

@@ -1,3 +1,4 @@
+import pandas as pd
 import os, pyodbc
 from dotenv import load_dotenv
 from prefect import task
@@ -35,3 +36,22 @@ def usp_batch_load_projections(league_id: str, current_season: str = None, curre
             cursor.execute("exec [dbo].[usp_batch_load_projections] ?, ?, ?", league_id, current_season, current_date_est)
         conn.commit()
         print("exec dbo.usp_batch_load_projections " + league_id + " executed successfully")
+
+@task(retries=5, retry_delay_seconds=5)
+def select_player_performance_predict(league_id: str, current_date_est: str = None):
+    query = f"""
+    SELECT * 
+    FROM modelling.player_performance_predict
+    WHERE PERSON_ID IS NOT NULL AND league_id = ? AND game_date_est = ?
+    """
+    with pyodbc.connect(conn_str, timeout=180) as conn:
+        df_today = pd.read_sql(query, conn, params=[league_id, current_date_est])
+    return df_today
+
+@task(retries=5, retry_delay_seconds=5)
+def usp_load_silver_predicted_player_performance(league_id: str):
+    with pyodbc.connect(conn_str) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("exec [dbo].[usp_load_silver_predicted_player_performance] ?", league_id)
+        conn.commit()
+        print("exec dbo.usp_load_silver_predicted_player_performance " + league_id + " executed successfully")

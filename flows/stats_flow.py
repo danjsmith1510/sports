@@ -1,8 +1,8 @@
 import json, os
 from dotenv import load_dotenv
 from prefect import flow
-from tasks.common.database import usp_batch_load_stats, insert_bronze_extracts
-from tasks.common.utils import get_date_ranges
+from tasks.database import usp_batch_load_stats, insert_bronze_extracts
+from tasks.utils import get_date_ranges
 from tasks.nba_api import get_traditional_box_scores, get_players, get_schedule, get_teams_nba, get_teams_wnba, get_advanced_box_scores
 
 load_dotenv(verbose=True, override=True)

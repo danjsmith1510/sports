@@ -15,7 +15,7 @@ conn_str = (
     "Uid=dan;"
     "Pwd=Ernie2022;"
     "Encrypt=yes;"
-    "TrustServerCertificate=no;"
+    "TrustServerCertificate=yes;"
     "Connection Timeout=30;"
 )
 conn = pyodbc.connect(conn_str)
@@ -24,7 +24,7 @@ conn = pyodbc.connect(conn_str)
 query = """
 SELECT *
 FROM modelling.player_performance_train
-WHERE POINTS IS NOT NULL AND REBOUNDS IS NOT NULL AND ASSISTS IS NOT NULL
+WHERE POINTS IS NOT NULL AND REBOUNDS IS NOT NULL AND ASSISTS IS NOT NULL and league_id = 2
 """
 df = pd.read_sql(query, conn)
 print(f"✅ Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")

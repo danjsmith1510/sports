@@ -1,8 +1,9 @@
 import json, os
 from dotenv import load_dotenv
 from prefect import flow
-from tasks.common.database import insert_bronze_extracts, usp_batch_load_projections
-from tasks.common.utils import get_date_ranges
+from tasks.database import insert_bronze_extracts, usp_batch_load_projections, usp_load_silver_predicted_player_performance
+from tasks.modelling import generate_daily_predictions
+from tasks.utils import get_date_ranges
 from tasks.rotowire import get_projected_minutes, get_projected_statistics
 
 load_dotenv(verbose=True, override=True)
@@ -40,6 +41,12 @@ def projections_flow() -> str:
 
         usp_batch_load_projections(internal_league_id_nba, current_season_nba, current_date_est)
 
+        predicted_daily_performance = generate_daily_predictions(league_id=internal_league_id_nba, current_date_est=current_date_est)
+        print(f"Generated predicted performance for NNBA games on or after {current_date_est} - {len(predicted_daily_performance)} predictions")  
+        insert_bronze_extracts("nba-model-predictions", predicted_daily_performance)
+
+        usp_load_silver_predicted_player_performance(internal_league_id_nba)
+
     if (league_active_wnba == "False"):
         print("WNBA league is not active, skipping projected minutes extraction")
     else:
@@ -52,6 +59,12 @@ def projections_flow() -> str:
         insert_bronze_extracts("projected-stats-wnba", projected_statistics_list_wnba)
 
         usp_batch_load_projections(internal_league_id_wnba, current_season_wnba, current_date_est)
+
+        predicted_daily_performance = generate_daily_predictions(league_id=internal_league_id_wnba, current_date_est=current_date_est)
+        print(f"Generated predicted performance for WNBA games on {current_date_est}")  
+        insert_bronze_extracts("wnba-model-predictions", predicted_daily_performance)
+
+        usp_load_silver_predicted_player_performance(internal_league_id_wnba)
 
     return "projections_flow flow completed successfully"
 
