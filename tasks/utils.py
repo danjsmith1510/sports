@@ -8,6 +8,6 @@ def get_date_ranges():
     date_range_dict['today_et'] = today_et
     date_range_dict['schedule_start_date'] = today_et - dt.timedelta(days=1)
     date_range_dict['schedule_end_date'] = today_et + dt.timedelta(days=3)
-    date_range_dict['boxscore_start_date'] = today_et - dt.timedelta(days=6)
+    date_range_dict['boxscore_start_date'] = today_et - dt.timedelta(days=3)
     date_range_dict['boxscore_end_date'] = today_et
     return date_range_dict

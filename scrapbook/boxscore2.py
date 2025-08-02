@@ -6,12 +6,17 @@ import requests
 from dotenv import load_dotenv
 from nba_api.stats.endpoints import boxscoretraditionalv3, scoreboardv2, BoxScoreAdvancedV2
 
+# season	PRE_SEASON_START	PLAYOFFS_END
+# 2022	2022-09-30	2023-06-12
+# 2023	2023-10-05	2024-06-17
+# 2024	2024-10-04	2025-06-22
+
 # --- Date setup ---
 def xget_date_ranges():
     date_range_dict = {}
     date_range_dict['today_et'] = dt.datetime.today().astimezone(pytz.timezone('US/Eastern')).date()
-    date_range_dict['boxscore_start_date'] = dt.date(year=2022, month=3, day=8)
-    date_range_dict['boxscore_end_date'] = dt.date(year=2022, month=4, day=30) 
+    date_range_dict['boxscore_start_date'] = dt.date(year=2023, month=1, day=1)
+    date_range_dict['boxscore_end_date'] = dt.date(year=2023, month=6, day= 13) 
     return date_range_dict
 
 # --- Load environment variables ---
