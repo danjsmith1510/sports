@@ -11,3 +11,4 @@ def get_date_ranges():
     date_range_dict['boxscore_start_date'] = today_et - dt.timedelta(days=3)
     date_range_dict['boxscore_end_date'] = today_et
     return date_range_dict
+

@@ -29,7 +29,7 @@ def projections_flow() -> str:
     current_date_est = date_ranges['today_et'].strftime('%Y-%m-%d')
 
     if (league_active_nba == "False"):
-        print("NBA league is not active, skipping projected minutes extraction")
+        print("NBA league is not active, skipping projections flow")
     else:
         projected_minutes_list_nba = get_projected_minutes(nba_teams, rotowire_url_mins_nba)
         print(f"Got projected minutes for {len(wnba_teams)} nba teams")  
@@ -48,7 +48,7 @@ def projections_flow() -> str:
         usp_load_silver_predicted_player_performance(internal_league_id_nba)
 
     if (league_active_wnba == "False"):
-        print("WNBA league is not active, skipping projected minutes extraction")
+        print("WNBA league is not active, skipping projections flow")
     else:
         projected_minutes_list_wnba = get_projected_minutes(wnba_teams, rotowire_url_mins_wnba)
         print(f"Got projected minutes for {len(wnba_teams)} wnba teams")  
