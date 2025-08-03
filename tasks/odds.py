@@ -41,13 +41,13 @@ def get_wnba_playerprop_odds():
     time.sleep(2)
     for event in events:
         timeDiff = datetime.datetime.fromisoformat(event['commence_time']) - datetime.datetime.fromisoformat(now_utc)
-        hoursDiff = timeDiff.total_seconds() / 3600
+        hoursDiff = round(timeDiff.total_seconds() / 3600, 2)
         if 0 < hoursDiff < 5: 
-            print(f"{event['id']} - {event['away_team']} @ {event['home_team']} - {event['commence_time']} is {str(timeDiff.total_seconds()//3600)} hours away --> fetching player props")
+            print(f"{event['id']} - {event['away_team']} @ {event['home_team']} - {event['commence_time']} is {str(hoursDiff)} hours away --> fetching player props")
             markets_url = oddsapi_url_wnba_get_event_markets + event['id'] + '/odds?apiKey=' + oddsapi_apikey + '&regions=' + oddsapi_regions + '&markets=' + oddsapi_markets
             markets = requests.get(markets_url)
             print(f"{event['id']} - {event['away_team']} @ {event['home_team']} - {event['commence_time']} --> got player props")
             oddsList.append(markets.json())
         else:
-            print(f"{event['id']} - {event['away_team']} @ {event['home_team']} - {event['commence_time']} is {str(timeDiff.total_seconds()//3600)} hours away --> not fetching player props")
+            print(f"{event['id']} - {event['away_team']} @ {event['home_team']} - {event['commence_time']} is {str(hoursDiff)} hours away --> not fetching player props")
     return json.dumps(oddsList)
