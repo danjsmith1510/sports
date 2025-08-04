@@ -16,6 +16,9 @@ def generate_daily_predictions(league_id, current_date_est) -> dict:
     feature_cols = joblib.load("models/wnba_feature_columns.joblib")
     #Get today's games to predict
     games_to_predict = get_daily_games_to_predict(league_id, current_date_est)
+    if games_to_predict.empty:
+        print("No games to predict for today.")
+        return json.dumps([])
     games_to_predict = games_to_predict.drop(columns=['POINTS', 'REBOUNDS', 'ASSISTS'])
     # Prepare data for prediction
     player_meta = games_to_predict[['GAME_ID', 'TEAM_ID', 'PERSON_ID']].copy()
