@@ -11,7 +11,7 @@ async def login_rotowire(page):
     await page.goto(os.environ.get("rotowire_login_url", ""))
     
     print("🧾 Filling in username...")
-    await page.fill('input[placeholder="Enter username or email"]', os.environ.get("rotowire_username", ""))
+    await page.fill('input[placeholder="Enter username"]', os.environ.get("rotowire_username", ""))
     
     print("🔒 Filling in password...")
     await page.fill('input[placeholder="Enter your password"]', os.environ.get("rotowire_password", ""))
