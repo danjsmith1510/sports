@@ -14,7 +14,7 @@ oddsapi_markets = os.environ.get("oddsapi_markets")
 now_utc = datetime.datetime.now(timezone.utc).isoformat()
 
 @task
-def get_nba_playerprop_odds():
+def get_nba_playerprops_oddsapi():
     """Get nba player prop odds from OddsAPI"""
     oddsList = []
     response = requests.get(oddsapi_url_nba_get_events + oddsapi_apikey)
@@ -33,7 +33,7 @@ def get_nba_playerprop_odds():
     return json.dumps(oddsList)
 
 @task
-def get_wnba_playerprop_odds():
+def get_wnba_playerprops_oddsapi():
     """Get wnba player prop odds from OddsAPI"""
     oddsList = []
     response = requests.get(oddsapi_url_wnba_get_events + oddsapi_apikey)

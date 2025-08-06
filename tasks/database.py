@@ -57,9 +57,9 @@ def usp_load_silver_predicted_player_performance(league_id: str):
         print("exec dbo.usp_load_silver_predicted_player_performance " + league_id + " executed successfully")
 
 @task(retries=5, retry_delay_seconds=5)
-def usp_load_silver_odds(league_id: str):
+def usp_load_silver_odds(league_id: str, data_source_id: str):
     with pyodbc.connect(conn_str) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("exec [dbo].[usp_load_silver_odds] ?", league_id)
+            cursor.execute("exec [dbo].[usp_load_silver_odds] ?, ?", league_id, data_source_id)
         conn.commit()
-        print("exec dbo.usp_load_silver_odds " + league_id + " executed successfully")
+        print("exec dbo.usp_load_silver_odds " + league_id + ", " +  data_source_id + " executed successfully")
