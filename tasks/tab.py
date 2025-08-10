@@ -3,11 +3,11 @@ import json
 from prefect import task, flow
 from playwright.sync_api import sync_playwright
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_headless_setting():
     return os.environ.get("headless", "true").lower() == "true"
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def fetch_tab_json(headless: bool, url: str):
     print(f"🚀 Launching browser (headless={headless})")
     with sync_playwright() as p:
@@ -32,14 +32,14 @@ def fetch_tab_json(headless: bool, url: str):
         browser.close()
         return json_data
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def save_json(data, output_file):
     print("💾 Saving JSON...")
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
     print(f"✅ Done. Saved to {output_file}")
 
-@flow
+@task(retries=5, retry_delay_seconds=10)
 def tab_flow(URL):
     headless = get_headless_setting()
     json_data = fetch_tab_json(headless, URL)

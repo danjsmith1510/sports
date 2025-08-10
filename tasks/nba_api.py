@@ -3,23 +3,23 @@ from prefect import task
 from nba_api.stats.endpoints import playerindex, scoreboardv2, boxscoretraditionalv3, BoxScoreAdvancedV2
 from nba_api.stats.static.teams import get_teams, get_wnba_teams
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_players(league_id, season) -> dict:
     players = playerindex.PlayerIndex(league_id, season)
     player_dict = players.get_normalized_dict()['PlayerIndex']
     return player_dict
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_teams_nba():
     nba_teams =  get_teams()
     return nba_teams
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_teams_wnba():
     wnba_teams =  get_wnba_teams()
     return wnba_teams
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_schedule(schedule_start_date, schedule_end_date, league_id):
     game_list=[]
     current_date = schedule_start_date
@@ -34,7 +34,7 @@ def get_schedule(schedule_start_date, schedule_end_date, league_id):
         current_date += dt.timedelta(days=1)
     return game_list
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_traditional_box_scores(box_scores_to_get):
     box_score_list = []
     gameCounter = 1
@@ -53,7 +53,7 @@ def get_traditional_box_scores(box_scores_to_get):
         gameCounter += 1
     return box_score_list
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_advanced_box_scores(box_scores_to_get):
     box_score_list_team = []
     box_score_list_player = []

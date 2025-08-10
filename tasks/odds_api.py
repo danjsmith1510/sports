@@ -13,7 +13,7 @@ oddsapi_regions = os.environ.get("oddsapi_regions")
 oddsapi_markets = os.environ.get("oddsapi_markets")
 now_utc = datetime.datetime.now(timezone.utc).isoformat()
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_nba_playerprops_oddsapi():
     """Get nba player prop odds from OddsAPI"""
     oddsList = []
@@ -32,7 +32,7 @@ def get_nba_playerprops_oddsapi():
             print(f"{event['id']} - {event['away_team']} @ {event['home_team']} - {event['commence_time']} is {str(timeDiff.total_seconds()//3600)} hours away --> not fetching player props")
     return json.dumps(oddsList)
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_wnba_playerprops_oddsapi():
     """Get wnba player prop odds from OddsAPI"""
     oddsList = []

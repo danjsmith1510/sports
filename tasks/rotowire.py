@@ -61,7 +61,7 @@ def get_projected_minutes(team_list, url):
         
     return asyncio.run(run())
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_projected_statistics(current_date_est, url):
     print("Launching Playwright...")
 

@@ -4,12 +4,12 @@ import pandas as pd
 from prefect import task
 from tasks.database import select_player_performance_predict
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def get_daily_games_to_predict(league_id, current_date_est) -> dict:
     games_to_predict = select_player_performance_predict(league_id, current_date_est)
     return games_to_predict
 
-@task
+@task(retries=5, retry_delay_seconds=10)
 def generate_daily_predictions(league_id, current_date_est) -> dict:
     # Load trained multi-output model
     model = joblib.load("models/wnba_model.joblib")
