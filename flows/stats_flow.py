@@ -29,9 +29,9 @@ def stats_flow() -> str:
         print(f"Got {len(nba_teams)} nba teams")  
         insert_bronze_extracts("teams-nba", json.dumps(nba_teams))
 
-        # nba_players = get_players(external_league_id_nba, current_season_nba)
-        # print(f"Got {len(nba_players)} nba players")
-        # insert_bronze_extracts("players-nba", json.dumps(nba_players))
+        nba_players = get_players(external_league_id_nba, current_season_nba)
+        print(f"Got {len(nba_players)} nba players")
+        insert_bronze_extracts("players-nba", json.dumps(nba_players))
 
         nba_schedule = get_schedule(date_ranges['schedule_start_date'], date_ranges['schedule_end_date'], external_league_id_nba)
         print(f"Got {len(nba_schedule)} nba games")  
@@ -57,9 +57,9 @@ def stats_flow() -> str:
         print(f"Got {len(wnba_teams)} wnba teams")  
         insert_bronze_extracts("teams-wnba", json.dumps(wnba_teams))
 
-        # wnba_players = get_players(external_league_id_wnba, current_season_wnba)
-        # print(f"Got {len(wnba_players)} wnba players")  
-        # insert_bronze_extracts("players-wnba", json.dumps(wnba_players))
+        wnba_players = get_players(external_league_id_wnba, current_season_wnba)
+        print(f"Got {len(wnba_players)} wnba players")  
+        insert_bronze_extracts("players-wnba", json.dumps(wnba_players))
 
         wnba_schedule = get_schedule(date_ranges['schedule_start_date'], date_ranges['schedule_end_date'], external_league_id_wnba)
         print(f"Got {len(wnba_schedule)} wnba games")  
