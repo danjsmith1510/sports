@@ -30,10 +30,10 @@ def odds_flow() -> str:
     if (league_active_wnba == "False"):
         print("WNBA league is not active, skipping player prop odds extraction")
     else:
-        playerprops_oddsapi = get_wnba_playerprops_oddsapi()
-        print(f"Got wnba player prop odds from the odds api")  
-        insert_bronze_extracts("player-prop-odds-wnba-oddsapi", playerprops_oddsapi)
-        usp_load_silver_odds(internal_league_id_wnba, 'odds-api')
+        # playerprops_oddsapi = get_wnba_playerprops_oddsapi()
+        # print(f"Got wnba player prop odds from the odds api")  
+        # insert_bronze_extracts("player-prop-odds-wnba-oddsapi", playerprops_oddsapi)
+        # usp_load_silver_odds(internal_league_id_wnba, 'odds-api')
 
         playerprops_sportsbet = sportsbet_flow(sportsbet_competition_url_wnba, sportsbet_market_group_ids_wnba, sportsbet_market_url_template_wnba)
         print(f"Got wnba player prop odds from sportsbet") 
