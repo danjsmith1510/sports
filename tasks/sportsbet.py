@@ -3,6 +3,10 @@ import time
 from prefect import task, flow
 from playwright.sync_api import sync_playwright
 
+# Toggle this to True if you want headless mode
+# For server with xvfb, keep this False for parity
+HEADLESS_MODE = False
+
 @task(retries=5, retry_delay_seconds=10)
 def run_browser_session(competition_url: str, group_ids: str, market_url_template: str):
     print("🚀 Launching Playwright browser...")
@@ -10,7 +14,7 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
     all_results = []
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)  # Try visible first to debug
+        browser = p.chromium.launch(headless=HEADLESS_MODE)
         context = browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
