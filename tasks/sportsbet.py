@@ -10,7 +10,7 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
     all_results = []
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)  # Try visible first to debug
+        browser = p.chromium.launch(headless=True)  # Try visible first to debug
         context = browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
