@@ -16,6 +16,7 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
 
         # Fetch competition JSON
         response = page.request.get(competition_url)
+        print (response)
         if not response.ok:
             print(f"❌ Failed to fetch competition URL: {competition_url}")
             return []
