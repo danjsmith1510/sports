@@ -37,7 +37,7 @@ deployments:
       cron: "30 9-22 * * *"
       timezone: "America/New York"
   - name: odds_flow
-    entrypoint: entrypoint: xvfb-run -a python3 flows/odds_flow.py:odds_flow
+    entrypoint: xvfb-run -a python3 flows/odds_flow.py:odds_flow
     work_pool:
       name: default-agent-pool
       work_queue_name: default
