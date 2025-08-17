@@ -56,21 +56,28 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
         time.sleep(2)
 
         # Make request with cookies + headers
-        response = context.request.get(
-            competition_url,
-            headers={
-                "Referer": "https://www.sportsbet.com.au/",
-                "Origin": "https://www.sportsbet.com.au",
-                "Accept": "application/json, text/plain, */*",
-                "Accept-Language": "en-US,en;q=0.9",
-            }
+        response_text = page.evaluate(
+            """async (url) => {
+                const res = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Referer': 'https://www.sportsbet.com.au/',
+                        'Origin': 'https://www.sportsbet.com.au',
+                        'Accept': 'application/json, text/plain, */*',
+                        'Accept-Language': 'en-US,en;q=0.9',
+                    },
+                    credentials: 'include'
+                });
+                return await res.text();
+            }""",
+            competition_url
         )
 
-        if not response.ok:
-            print(f"❌ Failed to fetch competition URL: {competition_url} ({response.status})")
-            return []
+        # if not response.ok:
+        #     print(f"❌ Failed to fetch competition URL: {competition_url} ({response.status})")
+        #     return []
 
-        data = response.json()
+        data = json.loads(response_text)
         events = data.get("events", [])
         print(f"🔍 Found {len(events)} events.")
 
