@@ -33,6 +33,7 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=headless)
+
         context = browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -44,34 +45,26 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
         )
         page = context.new_page()
 
-        headers={
-            "Referer": "https://www.sportsbet.com.au/",
-            "Origin": "https://www.sportsbet.com.au",
-            "Accept": "application/json, text/plain, */*",
-            "Accept-Language": "en-US,en;q=0.9",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
-        }
-
+        # Always visit homepage first to set cookies
         print("🌐 Navigating to Sportsbet homepage...")
         page.goto("https://www.sportsbet.com.au/", wait_until="domcontentloaded")
         time.sleep(2)
-        print(f"🌐 Navigating to competition page: {competition_url}")
+
+        # Navigate to the competition's root site (not API endpoint)
+        print(f"🌐 Navigating to competition root: {competition_url.split('/apigw/')[0]}")
         page.goto(competition_url.split("/apigw/")[0], wait_until="domcontentloaded")
         time.sleep(2)
 
-        response = page.request.get(competition_url, headers=headers)
-
-        # # Now use the context's request object with cookies
-        # response = context.request.get(
-        #     competition_url,
-        #     headers={
-        #         "Referer": "https://www.sportsbet.com.au/",
-        #         "Origin": "https://www.sportsbet.com.au",
-        #         "Accept": "application/json, text/plain, */*",
-        #         "Accept-Language": "en-US,en;q=0.9",
-        #         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
-        #     }
-        # )
+        # Make request with cookies + headers
+        response = context.request.get(
+            competition_url,
+            headers={
+                "Referer": "https://www.sportsbet.com.au/",
+                "Origin": "https://www.sportsbet.com.au",
+                "Accept": "application/json, text/plain, */*",
+                "Accept-Language": "en-US,en;q=0.9",
+            }
+        )
 
         if not response.ok:
             print(f"❌ Failed to fetch competition URL: {competition_url} ({response.status})")
@@ -101,6 +94,7 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
             for group_id in group_ids:
                 url = market_url_template.format(event_id=event_id, group_id=group_id)
                 print(f"📡 Fetching group {group_id} markets...")
+
                 market_response = context.request.get(
                     url,
                     headers={
