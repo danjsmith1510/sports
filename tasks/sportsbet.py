@@ -44,7 +44,9 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
         )
         page = context.new_page()
 
-        # Load competition page in browser first (sets cookies/session)
+        print("🌐 Navigating to Sportsbet homepage...")
+        page.goto("https://www.sportsbet.com.au/", wait_until="domcontentloaded")
+        time.sleep(2)
         print(f"🌐 Navigating to competition page: {competition_url}")
         page.goto(competition_url.split("/apigw/")[0], wait_until="domcontentloaded")
         time.sleep(2)
@@ -54,8 +56,10 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
             competition_url,
             headers={
                 "Referer": "https://www.sportsbet.com.au/",
-                "Accept": "application/json",
+                "Origin": "https://www.sportsbet.com.au",
+                "Accept": "application/json, text/plain, */*",
                 "Accept-Language": "en-US,en;q=0.9",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
             }
         )
 
