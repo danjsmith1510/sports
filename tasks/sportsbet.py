@@ -1,20 +1,38 @@
 import json
+import os
+import shutil
 import time
 from prefect import task, flow
 from playwright.sync_api import sync_playwright
 
-# Toggle this to True if you want headless mode
-# For server with xvfb, keep this False for parity
-HEADLESS_MODE = False
+
+def detect_headless_mode() -> bool:
+    """
+    Detect whether to run Playwright in headless mode.
+    - If DISPLAY is set or xvfb-run exists, run headful (False).
+    - Otherwise, force headless (True).
+    """
+    if os.getenv("DISPLAY"):
+        print("💻 DISPLAY found -> running headful mode")
+        return False
+    elif shutil.which("xvfb-run"):
+        print("🖼️ xvfb-run found -> assume headful mode (run with xvfb-run)")
+        return False
+    else:
+        print("⚠️ No DISPLAY or xvfb found -> falling back to headless mode")
+        return True
+
 
 @task(retries=5, retry_delay_seconds=10)
 def run_browser_session(competition_url: str, group_ids: str, market_url_template: str):
-    print("🚀 Launching Playwright browser...")
+    headless = detect_headless_mode()
+    print(f"🚀 Launching Playwright browser (headless={headless})")
+
     group_ids = [team.strip() for team in group_ids.split(",")]
     all_results = []
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=HEADLESS_MODE)
+        browser = p.chromium.launch(headless=headless)
         context = browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
