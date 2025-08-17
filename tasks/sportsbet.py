@@ -44,6 +44,14 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
         )
         page = context.new_page()
 
+        headers={
+            "Referer": "https://www.sportsbet.com.au/",
+            "Origin": "https://www.sportsbet.com.au",
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "en-US,en;q=0.9",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+        }
+
         print("🌐 Navigating to Sportsbet homepage...")
         page.goto("https://www.sportsbet.com.au/", wait_until="domcontentloaded")
         time.sleep(2)
@@ -51,17 +59,19 @@ def run_browser_session(competition_url: str, group_ids: str, market_url_templat
         page.goto(competition_url.split("/apigw/")[0], wait_until="domcontentloaded")
         time.sleep(2)
 
-        # Now use the context's request object with cookies
-        response = context.request.get(
-            competition_url,
-            headers={
-                "Referer": "https://www.sportsbet.com.au/",
-                "Origin": "https://www.sportsbet.com.au",
-                "Accept": "application/json, text/plain, */*",
-                "Accept-Language": "en-US,en;q=0.9",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
-            }
-        )
+        response = page.request.get(competition_url, headers=headers)
+
+        # # Now use the context's request object with cookies
+        # response = context.request.get(
+        #     competition_url,
+        #     headers={
+        #         "Referer": "https://www.sportsbet.com.au/",
+        #         "Origin": "https://www.sportsbet.com.au",
+        #         "Accept": "application/json, text/plain, */*",
+        #         "Accept-Language": "en-US,en;q=0.9",
+        #         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+        #     }
+        # )
 
         if not response.ok:
             print(f"❌ Failed to fetch competition URL: {competition_url} ({response.status})")
