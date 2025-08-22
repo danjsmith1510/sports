@@ -54,10 +54,3 @@ deployments:
       oddsapi_markets: ${oddsapi_markets}
     schedule:
       cron: "50 * * * *"
-  - name: scraping_test
-    entrypoint: flows/stats_flow.py:scraping_test
-    work_pool:
-      name: default-agent-pool
-      work_queue_name: default
-    environment:
-      conn_str_sports: ${conn_str_sports}
