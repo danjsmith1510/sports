@@ -41,7 +41,7 @@ def odds_flow() -> str:
         insert_bronze_extracts("player-prop-odds-wnba-sportsbet", playerprops_sportsbet)
         usp_load_silver_odds(internal_league_id_wnba, 'sportsbet')
 
-        # playerprops_tab = tab_flow(tab_url_wnba)
+        # playerprops_tab = tab_flow(tab_url_wnba) 
         # print(f"Got wnba player prop odds from tab") 
         # insert_bronze_extracts("player-prop-odds-wnba-tab", playerprops_tab)
 
