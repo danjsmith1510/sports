@@ -17,7 +17,6 @@ deployments:
       current_season_wnba: ${current_season_wnba}
     schedule:
       cron: "0 9 * * *"
-      timezone: "America/New York"
   - name: projections_flow
     entrypoint: flows/projections_flow.py:projections_flow
     work_pool:
@@ -35,7 +34,6 @@ deployments:
       current_season_wnba: ${current_season_wnba}
     schedule:
       cron: "30 9-22 * * *"
-      timezone: "America/New York"
   - name: odds_flow
     entrypoint: xvfb-run -a python3 flows/odds_flow.py:odds_flow
     work_pool:
@@ -56,7 +54,6 @@ deployments:
       oddsapi_markets: ${oddsapi_markets}
     schedule:
       cron: "50 * * * *"
-      timezone: "America/New York"
   - name: scraping_test
     entrypoint: flows/stats_flow.py:scraping_test
     work_pool:

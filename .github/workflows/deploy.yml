@@ -36,10 +36,10 @@ jobs:
           # Upgrade pip and install dependencies
           pip install --upgrade pip
           pip install -r requirements.txt
-          sudo playwright install chromium --with-deps
+          playwright install chromium --with-deps
 
           # Set Prefect server URL
-          export PREFECT_API_URL=http://34.19.3.21:4200/api
+          export PREFECT_API_URL=http://34.40.204.70:4200/api
 
           echo "🚀 Starting Prefect server in background"
           screen -dmS server prefect server start --host 0.0.0.0

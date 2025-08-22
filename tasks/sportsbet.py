@@ -14,10 +14,10 @@ def detect_headless_mode() -> bool:
     """
     if os.getenv("DISPLAY"):
         print("💻 DISPLAY found -> running headful mode")
-        return False
+        return True
     elif shutil.which("xvfb-run"):
         print("🖼️ xvfb-run found -> assume headful mode (run with xvfb-run)")
-        return False
+        return True
     else:
         print("⚠️ No DISPLAY or xvfb found -> falling back to headless mode")
         return True
